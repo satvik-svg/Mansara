@@ -46,3 +46,5 @@ temp/
 *.fbx
 *.glb
 *.gltf
+
+.COLAB_FREE_RUNBOOK.md/
