@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "version",
+    "session_id",
+    "source",
+    "pipeline_mode",
+    "room",
+    "walls",
+    "windows",
+    "doors",
+    "objects",
+    "metadata"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string"
+    },
+    "pipeline_mode": {
+      "type": "string"
+    },
+    "room": {
+      "type": "object",
+      "required": [
+        "width",
+        "width_confidence",
+        "depth",
+        "depth_confidence",
+        "height",
+        "height_confidence",
+        "floor_plane",
+        "floor_plane_inlier_ratio"
+      ],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "width_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "depth": {"type": "number", "exclusiveMinimum": 0},
+        "depth_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "height_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "floor_plane": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {"type": "number"}
+        },
+        "floor_plane_inlier_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "walls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "x1", "z1", "x2", "z2", "confidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "x1": {"type": "number"},
+          "z1": {"type": "number"},
+          "x2": {"type": "number"},
+          "z2": {"type": "number"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "windows": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/opening"}
+    },
+    "doors": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/opening"}
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "type_confidence",
+          "position_confidence",
+          "size_confidence",
+          "rotation_confidence",
+          "label_confirmed",
+          "position",
+          "size",
+          "rotation_y"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "type": {"type": "string"},
+          "type_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "position_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "size_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "rotation_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "label_confirmed": {"type": "boolean"},
+          "position": {
+            "type": "object",
+            "required": ["x", "y", "z"],
+            "properties": {
+              "x": {"type": "number"},
+              "y": {"type": "number"},
+              "z": {"type": "number"}
+            }
+          },
+          "size": {
+            "type": "object",
+            "required": ["w", "h", "d"],
+            "properties": {
+              "w": {"type": "number", "exclusiveMinimum": 0},
+              "h": {"type": "number", "exclusiveMinimum": 0},
+              "d": {"type": "number", "exclusiveMinimum": 0}
+            }
+          },
+          "rotation_y": {"type": "number"},
+          "color": {"type": ["string", "null"]},
+          "product_url": {"type": ["string", "null"]},
+          "product_name": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["pipeline_version", "confidence", "created_at", "last_edited"],
+      "properties": {
+        "room_type": {"type": ["string", "null"]},
+        "room_type_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "pipeline_version": {"type": "string"},
+        "confidence": {
+          "type": "string",
+          "enum": ["metric", "partial", "approximate", "demo"]
+        },
+        "created_at": {"type": "string"},
+        "last_edited": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "opening": {
+      "type": "object",
+      "required": ["id", "wall", "x", "width", "height", "confidence", "user_confirmed"],
+      "properties": {
+        "id": {"type": "string"},
+        "wall": {"type": "string"},
+        "x": {"type": "number"},
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "sill_height": {"type": "number", "minimum": 0},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "user_confirmed": {"type": "boolean"}
+      }
+    }
+  }
+}
