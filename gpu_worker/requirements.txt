@@ -1,0 +1,6 @@
+numpy==1.26.4
+opencv-python==4.10.0.84
+open3d==0.18.0
+pycolmap==0.6.1
+flask==3.0.3
+pyngrok==7.1.6
